@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<head>
+<title>HTML L2 assignment </title>
+<style>
+div{
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+<div id="gcircle" ondragover="allowDrop(event)" ondrop="drop(event)">
+	<svg height="100" width="100">
+		<circle cx="45" cy="45" r="50" fill="green" />
+	</svg>
+</div>
+<div id="ycircle" ondragover="allowDrop(event)" ondrop="drop(event)">
+	<svg height="100" width="100">
+		<circle cx="45" cy="45" r="50" fill="yellow"/>
+	</svg>
+</div>
+<img id="drag1" src="C:\Users\MI20015258\Desktop\downloadimage.png" draggable="true" ondragstart="drag(event)" width="100" height="100"><br/>
+<span id="location"></span>
+<script>
+function allowDrop(ev) {
+	ev.preventDefault();
+}
+function drop(ev) {
+	ev.preventDefault();
+	var data = ev.dataTransfer.getData("text");
+	img = document.getElementById(data),
+	imgSrc = img.getAttribute('src'),
+	imgW = img.getAttribute('width'),
+	imgH = img.getAttribute('height'),
+	imgX = ev.target.getAttribute('cx') - ev.target.getAttribute('r');
+	ev.target.parentElement.innerHTML += '<image xlink:href="' + imgSrc + '" x="' + imgX + '" y="0" width="' + imgW + 'px" height="' + imgH + 'px"/>';
+	img.parentNode.removeChild(img);
+}
+function drag(ev) {
+	ev.dataTransfer.setData("text", ev.target.id);
+}
+var geolocation = navigator.geolocation;
+if(typeof(Storage) !== "undefined"){
+	if(localStorage.getItem("location") != null){
+		document.getElementById("location").innerHTML = localStorage.getItem("location");
+	}else{
+		geolocation.getCurrentPosition(function showLocation( position ) {
+			var latitude = position.coords.latitude;
+			var longitude = position.coords.longitude;
+			localStorage.setItem("location", "Location is Latitude: " + latitude + ", Longitude: " + longitude);
+		}, function errorHandler( err ) {
+			if (err.code == 1) {
+				console.log('Access is denied');
+			}
+		}, {maximumAge: 75000});
+	}
+}else{
+	console.log("Browser does not support storage");
+}
+</script>
+</body>
+</html>
